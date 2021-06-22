@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+    oilPrices:
+      image: oilprices
+      restart: always
+      container_name: oilprices
+      build:
+        context: oilprices
+      volumes:
+        - ./oilprices:/scripts
+        - /etc/localtime:/etc/localtime:ro
+      ports:
+        - 9234:80
+      tty: true
+      command:
+        - /etc/init.d/ssh start
+      environment:
+        - TZ=America/New_York
+      labels: # If you have traefik setup
+        - traefik.enable=true
+        - "traefik.frontend.rule=Host:oilprices.DOMAIN.COM"
+        - traefik.port=80
+        - traefik.docker.network=container-net
